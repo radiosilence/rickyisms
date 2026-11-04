@@ -1,0 +1,16 @@
+[package]
+name = "rickyism"
+version = "0.1.0"
+edition = "2024"
+description = "Prints a Rickyism of the day, for use as a shell MOTD"
+license = "MIT"
+repository = "https://github.com/radiosilence/rickyisms"
+
+[dependencies]
+serde = { version = "1", features = ["derive"] }
+serde_json = "1"
+
+[profile.release]
+opt-level = "z"
+lto = true
+strip = true
