@@ -1,9 +1,24 @@
 use std::io::IsTerminal;
 use std::time::{SystemTime, UNIX_EPOCH};
 
+use clap::{CommandFactory, Parser};
+use clap_complete::Shell;
 use serde::Deserialize;
 
-const PAGE: &str = include_str!("../../index.html");
+const DATA: &str = include_str!("../../rickyisms.json");
+
+/// Prints a Rickyism of the day.
+#[derive(Parser)]
+#[command(version)]
+struct Cli {
+    /// Pick a random Rickyism instead of today's
+    #[arg(short, long)]
+    random: bool,
+
+    /// Print a shell completion script and exit
+    #[arg(long, value_name = "SHELL")]
+    completions: Option<Shell>,
+}
 
 #[derive(Deserialize)]
 struct Rickyism {
@@ -14,15 +29,21 @@ struct Rickyism {
 }
 
 fn main() {
-    let json = PAGE
-        .lines()
-        .find_map(|l| l.trim().strip_prefix("const DATA = "))
-        .and_then(|l| l.strip_suffix(';'))
-        .expect("index.html has no DATA line");
-    let data: Vec<Rickyism> = serde_json::from_str(json).expect("DATA is not valid JSON");
+    let cli = Cli::parse();
+    if let Some(shell) = cli.completions {
+        clap_complete::generate(
+            shell,
+            &mut Cli::command(),
+            "rickyism",
+            &mut std::io::stdout(),
+        );
+        return;
+    }
+
+    let data: Vec<Rickyism> = serde_json::from_str(DATA).expect("rickyisms.json is not valid JSON");
 
     let now = SystemTime::now().duration_since(UNIX_EPOCH).unwrap();
-    let index = if std::env::args().any(|a| a == "-r" || a == "--random") {
+    let index = if cli.random {
         now.subsec_nanos() as usize
     } else {
         (now.as_secs() / 86_400) as usize
