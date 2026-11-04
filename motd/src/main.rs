@@ -15,6 +15,14 @@ struct Cli {
     #[arg(short, long)]
     random: bool,
 
+    /// Hide what Ricky meant
+    #[arg(short = 'C', long)]
+    no_correct: bool,
+
+    /// Hide the episode
+    #[arg(short = 'E', long)]
+    no_episode: bool,
+
     /// Print a shell completion script and exit
     #[arg(long, value_name = "SHELL")]
     completions: Option<Shell>,
@@ -58,8 +66,10 @@ fn main() {
         };
 
     println!("{bold}\u{201c}{}\u{201d}{reset}", r.s);
-    println!("  {dim}= {}{reset}", r.a);
-    if !r.e.is_empty() {
+    if !cli.no_correct {
+        println!("  {dim}= {}{reset}", r.a);
+    }
+    if !cli.no_episode && !r.e.is_empty() {
         println!("  {dim}({}){reset}", r.e);
     }
 }

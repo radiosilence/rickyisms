@@ -8,7 +8,7 @@ Content is from the Trailer Park Boys Wiki under [CC BY-SA 3.0](https://creative
 
 ## Rickyism of the day
 
-`motd/` is a small CLI that prints one Rickyism per day, for a shell greeting or MOTD. It compiles `rickyisms.json` into the binary, so it needs no network or data files at runtime. The pick is the day number since the Unix epoch (UTC) modulo the list length, so it changes once a day and is the same on every machine; `--random` picks one at random instead. Colour is used only on a terminal and is disabled by `NO_COLOR`.
+`motd/` is a small CLI that prints one Rickyism per day, for a shell greeting or MOTD. It compiles `rickyisms.json` into the binary, so it needs no network or data files at runtime. The pick is the day number since the Unix epoch (UTC) modulo the list length, so it changes once a day and is the same on every machine; `--random` picks one at random instead. `-C/--no-correct` and `-E/--no-episode` hide what he meant and the episode. Colour is used only on a terminal and is disabled by `NO_COLOR`.
 
 ```sh
 cargo install --path motd
