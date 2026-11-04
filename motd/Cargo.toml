@@ -3,7 +3,7 @@ name = "rickyism"
 version = "0.1.0"
 edition = "2024"
 description = "Prints a Rickyism of the day, for use as a shell MOTD"
-license = "MIT"
+license = "MIT AND CC-BY-SA-3.0"
 repository = "https://github.com/radiosilence/rickyisms"
 
 [dependencies]
