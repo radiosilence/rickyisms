@@ -11,7 +11,7 @@ Content is from the Trailer Park Boys Wiki under [CC BY-SA 3.0](https://creative
 `motd/` is a small CLI that prints one Rickyism per day, for a shell greeting or MOTD. It compiles `rickyisms.json` into the binary, so it needs no network or data files at runtime. The pick is the day number since the Unix epoch (UTC) modulo the list length, so it changes once a day and is the same on every machine; `--random` picks one at random instead. `-C/--no-correct` and `-E/--no-episode` hide what he meant and the episode. Colour is used only on a terminal and is disabled by `NO_COLOR`.
 
 ```sh
-brew install radiosilence/rickyisms/rickyism
+brew install radiosilence/tap/rickyism
 echo rickyism >> ~/.zshrc
 ```
 
@@ -19,6 +19,6 @@ The Homebrew formula installs bash, zsh and fish completions. From source, `carg
 
 ### Releasing
 
-Bump `version` in `motd/Cargo.toml` and merge. On main, CI releases any version that has no GitHub release yet: it builds static Linux binaries (x86_64, arm64) and a signed, notarised macOS arm64 binary, publishes them as `v<version>`, and rewrites the formula in [homebrew-rickyisms](https://github.com/radiosilence/homebrew-rickyisms). A manual run of the workflow on main retries a failed release.
+Bump `version` in `motd/Cargo.toml` and merge. On main, CI releases any version that has no GitHub release yet: it builds static Linux binaries (x86_64, arm64) and a signed, notarised macOS arm64 binary, publishes them as `v<version>`, and rewrites `Formula/rickyism.rb` in the shared [homebrew-tap](https://github.com/radiosilence/homebrew-tap). A manual run of the workflow on main retries a failed release.
 
 The workflow needs these repository secrets: `MACOS_CERTIFICATE_P12`, `MACOS_CERTIFICATE_PASSWORD`, `APPLE_API_KEY_P8`, `APPLE_API_KEY_ID` and `APPLE_API_ISSUER_ID` for signing (a release fails without them), and `RELEASE_TOKEN`, a token that can push to the tap (the tap update is skipped without it).

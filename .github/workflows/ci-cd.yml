@@ -2,8 +2,8 @@ name: CI/CD
 
 # CI checks and builds every change. CD runs on main when motd/Cargo.toml
 # carries a version that has no GitHub release yet: it publishes the release
-# with the binaries CI built, then rewrites the Homebrew formula. A manual run
-# on main retries a failed release.
+# with the binaries CI built, then rewrites the formula in
+# radiosilence/homebrew-tap. A manual run on main retries a failed release.
 on:
   push:
     branches: [main]
@@ -232,7 +232,7 @@ jobs:
           }
           MAC_ARM=$(sha macos-arm64)
           LIN_ARM=$(sha linux-arm64); LIN_X86=$(sha linux-x86_64)
-          git clone "https://x-access-token:${GITHUB_TOKEN}@github.com/radiosilence/homebrew-rickyisms.git" tap
+          git clone "https://x-access-token:${GITHUB_TOKEN}@github.com/radiosilence/homebrew-tap.git" tap
           cd tap
           mkdir -p Formula
           BASE="https://github.com/radiosilence/rickyisms/releases/download/v${VERSION}"
@@ -274,4 +274,11 @@ jobs:
             exit 0
           fi
           git commit -m "rickyism ${VERSION}"
-          git push
+          # The tap is shared with other projects' release workflows, so a
+          # push can lose a race; this commit touches only its own file.
+          for attempt in 1 2 3 4 5; do
+            git push && exit 0
+            sleep $((attempt * 5))
+            git pull --rebase -q
+          done
+          exit 1
